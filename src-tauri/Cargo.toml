@@ -1,0 +1,21 @@
+[package]
+name = "syntax-analyzer-app"
+version = "0.1.0"
+description = "A Tauri App"
+authors = ["you"]
+edition = "2021"
+
+[lib]
+name = "syntax_analyzer_app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-shell = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+hyper-tls = { version = "0.6.0" }
+syntax-analyzer-core = { git = "https://github.com/orewaee/syntax-analyzer-core.git", branch = "release/v1.1.1" }
