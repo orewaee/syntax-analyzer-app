@@ -2,15 +2,34 @@
 import {Ref, ref} from "vue";
 import {invoke} from "@tauri-apps/api/core";
 
+import {Success, Error} from "./types";
+
 const input: Ref<string> = ref("");
 const output: Ref<string> = ref("");
 
-async function check() {
+const textareaRef = ref<HTMLTextAreaElement | null>(null);
+
+function focusTextarea(index: number) {
+    const textarea = textareaRef.value;
+    if (textarea == null) return;
+
+    textarea.focus();
+    textarea.setSelectionRange(index, index);
+}
+
+async function analyze() {
     try {
-        const message = await invoke("check", { chain: input.value });
-        output.value = message as string;
-    } catch (exception) {
-        output.value = exception as string;
+        const result: Success = JSON.parse(await invoke("analyze", { chain: input.value }));
+        console.log(result);
+
+        output.value = result.message.html;
+    } catch (error) {
+        const result: Error = JSON.parse(error);
+        console.log(result);
+
+        focusTextarea(result.index + 1);
+
+        output.value = result.message.html;
     }
 }
 
@@ -28,7 +47,7 @@ const presets: string[] = [
 
     <div class="input">
         <h1 class="title">Input</h1>
-        <textarea class="textarea" v-model="input" placeholder="Enter a chain..." />
+        <textarea ref="textareaRef" class="textarea" v-model="input" placeholder="Enter a chain..." />
     </div>
 
     <div class="output">
@@ -36,7 +55,7 @@ const presets: string[] = [
         <div class="textarea" v-html="output" />
     </div>
 
-    <button class="check" @click="check">Check</button>
+    <button class="analyze" @click="analyze">Analyze</button>
 </main>
 </template>
 
@@ -60,7 +79,7 @@ const presets: string[] = [
 }
 
 body {
-    /*
+
     --BG-500: #000;
     --BG-400: #0A0B0A;
     --BG-300: #0F100F;
@@ -74,8 +93,8 @@ body {
     --FG-100: #6F7B76;
 
     --ACCENT: #FFF;
-    */
 
+    /*
     --BG-500: #FFF;
     --BG-400: #F4F5F5;
     --BG-300: #EFF0F0;
@@ -89,6 +108,8 @@ body {
     --FG-100: #84908B;
 
     --ACCENT: #000;
+    */
+
     --GREEN: #16D886;
     --RED: #E74040;
 
@@ -148,7 +169,7 @@ h1, p, button {
     font-family: Inter, sans-serif;
 }
 
-.check {
+.analyze {
     color: var(--BG-500);
 
     font-size: 16px;
