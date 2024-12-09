@@ -71,9 +71,6 @@ const presets: string[] = [
 
     <div class="input">
         <h1 class="title">Input</h1>
-        <pre>textarea = {{textarea}}</pre>
-        <pre>success = {{JSON.stringify(success)}}</pre>
-        <pre>error = {{JSON.stringify(error)}}</pre>
         <textarea
             ref="textareaRef"
             class="textarea"
