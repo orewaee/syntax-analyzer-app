@@ -10,6 +10,7 @@ interface Error {
 }
 
 interface Success {
+    semantics?: string,
     message: Message
 }
 

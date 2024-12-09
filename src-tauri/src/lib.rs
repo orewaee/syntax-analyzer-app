@@ -32,6 +32,7 @@ fn analyze(chain: &str) -> Result<String, String> {
             let html = format!("<span class='right'>\"{}\" is chain</span>", chain);
 
             let result = AnalyzeSuccess {
+                semantics: String::from("foo bar"),
                 message: Message {
                     plain,
                     html,

@@ -1,13 +1,28 @@
 <script setup lang="ts">
 import {Ref, ref} from "vue";
 import {invoke} from "@tauri-apps/api/core";
-
 import {Success, Error} from "./types";
 
-const input: Ref<string> = ref("");
-const output: Ref<string> = ref("");
-
+// input
+const textarea: Ref<string> = ref("");
 const textareaRef = ref<HTMLTextAreaElement | null>(null);
+
+// output
+const success: Ref<Success | null> = ref(null);
+const error: Ref<Error | null> = ref(null);
+
+function clearOutput() {
+    showSemantics.value = false;
+
+    success.value = null;
+    error.value = null;
+}
+
+function onTextareaInput() {
+    clearOutput();
+}
+
+const showSemantics: Ref<boolean> = ref(false);
 
 function focusTextarea(index: number) {
     const textarea = textareaRef.value;
@@ -19,18 +34,27 @@ function focusTextarea(index: number) {
 
 async function analyze() {
     try {
-        const result: Success = JSON.parse(await invoke("analyze", { chain: input.value }));
+        const result: Success = JSON.parse(await invoke("analyze", { chain: textarea.value }));
         console.log(result);
 
-        output.value = result.message.html;
-    } catch (error) {
-        const result: Error = JSON.parse(error);
+        success.value = result;
+    } catch (exception) {
+        const result: Error = JSON.parse(exception);
         console.log(result);
 
         focusTextarea(result.index + 1);
 
-        output.value = result.message.html;
+        error.value = result;
     }
+}
+
+function semantics() {
+    showSemantics.value = true;
+}
+
+function clear() {
+    textarea.value = "";
+    clearOutput();
 }
 
 const presets: string[] = [
@@ -42,20 +66,50 @@ const presets: string[] = [
 <template>
 <main class="container">
     <div class="presets">
-        <button v-for="(preset, i) in presets" :key="i" class="preset" @click="() => input = preset">Preset {{i + 1}}</button>
+        <button v-for="(preset, i) in presets" :key="i" class="preset" @click="() => textarea = preset">Preset {{i + 1}}</button>
     </div>
 
     <div class="input">
         <h1 class="title">Input</h1>
-        <textarea ref="textareaRef" class="textarea" v-model="input" placeholder="Enter a chain..." />
+        <pre>textarea = {{textarea}}</pre>
+        <pre>success = {{JSON.stringify(success)}}</pre>
+        <pre>error = {{JSON.stringify(error)}}</pre>
+        <textarea
+            ref="textareaRef"
+            class="textarea"
+            v-model="textarea"
+            @input="onTextareaInput"
+            placeholder="Enter a chain..."
+        />
     </div>
 
     <div class="output">
-        <h1 class="title">Output</h1>
-        <div class="textarea" v-html="output" />
+        <h1 class="title">Syntax</h1>
+        <div class="textarea" v-if="success == null && error == null" v-html="'<span class=\'dimmed\'>missing</span>'" />
+        <div class="textarea" v-else-if="success != null" v-html="success.message.html" />
+        <div class="textarea foo" v-else-if="error != null" v-html="error.message.html" />
+
+        <h1 class="title">Semantics</h1>
+        <div class="textarea" v-html="(success != null) && showSemantics ? success.semantics : '<span class=\'dimmed\'>missing</span>'" />
     </div>
 
-    <button class="analyze" @click="analyze">Analyze</button>
+    <div class="buttons">
+        <button
+            :class="'button' + (textarea.length == 0 ? ' inactive' : '')"
+            :disabled="textarea.length == 0"
+            @click="analyze">
+            Analyze
+        </button>
+
+        <button
+            :class="'button' + (success == null || error != null ? ' inactive' : '')"
+            :disabled="success == null || error != null"
+            @click="semantics">
+            Semantics
+        </button>
+
+        <button class="button" @click="clear">Clear</button>
+    </div>
 </main>
 </template>
 
@@ -63,12 +117,20 @@ const presets: string[] = [
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
 
+pre {
+    color: var(--FG-500);
+}
+
 .right {
     color: var(--GREEN);
 }
 
 .wrong {
     color: var(--RED);
+}
+
+.dimmed {
+    color: var(--FG-100);
 }
 
 * {
@@ -169,7 +231,14 @@ h1, p, button {
     font-family: Inter, sans-serif;
 }
 
-.analyze {
+.buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.button {
+    flex: 1;
+
     color: var(--BG-500);
 
     font-size: 16px;
@@ -190,6 +259,14 @@ h1, p, button {
 
     &:hover {
         opacity: .8;
+    }
+
+    &.inactive {
+        color: var(--FG-300);
+
+        background-color: var(--BG-300);
+
+        cursor: not-allowed;
     }
 }
 

@@ -21,5 +21,6 @@ pub struct AnalyzeError {
 
 #[derive(Serialize)]
 pub struct AnalyzeSuccess {
+    pub semantics: String,
     pub message: Message
 }
