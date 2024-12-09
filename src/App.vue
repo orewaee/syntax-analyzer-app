@@ -130,6 +130,10 @@ pre {
     color: var(--FG-100);
 }
 
+.accent {
+    color: var(--BLUE);
+}
+
 * {
     box-sizing: border-box;
 
@@ -171,6 +175,7 @@ body {
 
     --GREEN: #16D886;
     --RED: #E74040;
+    --BLUE: #4065E7;
 
     background-color: var(--BG-500);
 }

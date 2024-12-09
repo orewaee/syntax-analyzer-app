@@ -27,12 +27,12 @@ fn analyze(chain: &str) -> Result<String, String> {
             let json = json!(&result).to_string();
             Err(json)
         },
-        Ok(_) => {
+        Ok(semantics) => {
             let plain = format!("\"{}\" is chain", chain);
             let html = format!("<span class='right'>\"{}\" is chain</span>", chain);
 
             let result = AnalyzeSuccess {
-                semantics: String::from("foo bar"),
+                semantics,
                 message: Message {
                     plain,
                     html,
