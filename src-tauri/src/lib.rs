@@ -1,7 +1,5 @@
 mod entities;
 
-use std::fmt::format;
-
 use serde_json::json;
 
 use syntax_analyzer_core::core::analyzer;

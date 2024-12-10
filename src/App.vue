@@ -39,7 +39,7 @@ async function analyze() {
 
         success.value = result;
     } catch (exception) {
-        const result: Error = JSON.parse(exception);
+        const result: Error = JSON.parse(exception as string);
         console.log(result);
 
         focusTextarea(result.index + 1);
@@ -57,6 +57,11 @@ function clear() {
     clearOutput();
 }
 
+function selectPreset(preset: string) {
+    textarea.value = preset;
+    clearOutput();
+}
+
 const presets: string[] = [
     "FOR F21A3 [IAX12, 25, J, 256] := -1 TO 1 DO;",
     "FOR I := 10 TO 20 BY 5 DO;"
@@ -66,7 +71,7 @@ const presets: string[] = [
 <template>
 <main class="container">
     <div class="presets">
-        <button v-for="(preset, i) in presets" :key="i" class="preset" @click="() => textarea = preset">Preset {{i + 1}}</button>
+        <button v-for="(preset, i) in presets" :key="i" class="preset" @click="() => selectPreset(preset)">Preset {{i}}</button>
     </div>
 
     <div class="input">

@@ -3309,7 +3309,6 @@ dependencies = [
 [[package]]
 name = "syntax-analyzer-core"
 version = "1.1.2"
-source = "git+https://github.com/orewaee/syntax-analyzer-core.git#e40938bd32deeec06bf67ccc0edd089a927d74cb"
 
 [[package]]
 name = "system-deps"
