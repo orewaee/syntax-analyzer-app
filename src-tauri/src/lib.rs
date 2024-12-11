@@ -27,7 +27,7 @@ fn analyze(chain: &str) -> Result<String, String> {
         },
         Ok(semantics) => {
             let plain = format!("\"{}\" is chain", chain);
-            let html = format!("<span class='right'>\"{}\" is chain</span>", chain);
+            let html = format!("<span class='right'>chain \"{}\" belongs to the language</span>", chain);
 
             let result = AnalyzeSuccess {
                 semantics,

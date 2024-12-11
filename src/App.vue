@@ -63,15 +63,16 @@ function selectPreset(preset: string) {
 }
 
 const presets: string[] = [
-    "FOR F21A3 [IAX12, 25, J, 256] := -1 TO 1 DO;",
-    "FOR I := 10 TO 20 BY 5 DO;"
+    "FOR I := 10 TO 20 BY 2 DO;",
+    "FOR ABC1D [I, 25, J, 75] := -100 TO -120 BY -5 DO;",
+    "FOR A3 := 1 TO 200 DO;"
 ];
 </script>
 
 <template>
 <main class="container">
     <div class="presets">
-        <button v-for="(preset, i) in presets" :key="i" class="preset" @click="() => selectPreset(preset)">Preset {{i}}</button>
+        <button v-for="(preset, i) in presets" :key="i" class="preset" @click="() => selectPreset(preset)">Preset {{i + 1}}</button>
     </div>
 
     <div class="input">
@@ -86,13 +87,12 @@ const presets: string[] = [
     </div>
 
     <div class="output">
-        <h1 class="title">Syntax</h1>
-        <div class="textarea" v-if="success == null && error == null" v-html="'<span class=\'dimmed\'>missing</span>'" />
+        <h1 class="title">Output</h1>
+        <div class="textarea" v-if="success == null && error == null" v-html="'<span class=\'dimmed\'>syntax</span>'" />
         <div class="textarea" v-else-if="success != null" v-html="success.message.html" />
         <div class="textarea foo" v-else-if="error != null" v-html="error.message.html" />
 
-        <h1 class="title">Semantics</h1>
-        <div class="textarea" v-html="(success != null) && showSemantics ? success.semantics : '<span class=\'dimmed\'>missing</span>'" />
+        <div class="textarea" v-html="(success != null) && showSemantics ? success.semantics : '<span class=\'dimmed\'>semantics</span>'" />
     </div>
 
     <div class="buttons">
@@ -194,13 +194,14 @@ body {
 
     .title {
         font-size: 24px;
+        font-weight: 500;
         line-height: 24px;
 
         color: var(--FG-500);
     }
 
     .textarea {
-        min-height: 96px;
+        min-height: calc(48px * 3);
         width: 100%;
 
         resize: vertical;
