@@ -10,8 +10,8 @@ use crate::entities::{Message, AnalyzeError, ErrorType, AnalyzeSuccess};
 #[tauri::command]
 fn analyze(chain: &str) -> Result<String, String> {
     match analyzer::analyze(chain, ';') {
-        Err((index, message)) => {
-            let html = error::with_message_html(chain, index, message);
+        Err((index, message, error_type)) => {
+            let html = error::with_message_html(chain, index, message, error_type);
 
             let result = AnalyzeError {
                 error_type: ErrorType::Syntax,

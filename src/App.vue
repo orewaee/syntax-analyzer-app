@@ -88,7 +88,7 @@ const presets: string[] = [
 
     <div class="output">
         <h1 class="title">Output</h1>
-        <div class="textarea" v-if="success == null && error == null" v-html="'<span class=\'dimmed\'>syntax</span>'" />
+        <div class="textarea" v-if="success == null && error == null" v-html="'<span class=\'dimmed\'>output</span>'" />
         <div class="textarea" v-else-if="success != null" v-html="success.message.html" />
         <div class="textarea foo" v-else-if="error != null" v-html="error.message.html" />
 
@@ -201,7 +201,7 @@ body {
     }
 
     .textarea {
-        min-height: calc(48px * 3);
+        min-height: calc(48px * 2);
         width: 100%;
 
         resize: vertical;
