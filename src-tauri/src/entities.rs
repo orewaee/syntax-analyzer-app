@@ -1,12 +1,6 @@
 use serde::{Serialize};
 
 #[derive(Serialize)]
-pub enum ErrorType {
-    Syntax,
-    Semantic,
-}
-
-#[derive(Serialize)]
 pub struct Message {
     pub plain: String,
     pub html: String
@@ -14,7 +8,6 @@ pub struct Message {
 
 #[derive(Serialize)]
 pub struct AnalyzeError {
-    pub error_type: ErrorType,
     pub index: i32,
     pub message: Message
 }

@@ -4,7 +4,6 @@ interface Message {
 }
 
 interface Error {
-    error_type: string,
     index: number,
     message: Message
 }

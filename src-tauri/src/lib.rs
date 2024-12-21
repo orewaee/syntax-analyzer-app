@@ -5,7 +5,7 @@ use serde_json::json;
 use syntax_analyzer_core::core::analyzer;
 use syntax_analyzer_core::cli::error;
 
-use crate::entities::{Message, AnalyzeError, ErrorType, AnalyzeSuccess};
+use crate::entities::{Message, AnalyzeError, AnalyzeSuccess};
 
 #[tauri::command]
 fn analyze(chain: &str) -> Result<String, String> {
@@ -14,7 +14,6 @@ fn analyze(chain: &str) -> Result<String, String> {
             let html = error::with_message_html(chain, index, message, error_type);
 
             let result = AnalyzeError {
-                error_type: ErrorType::Syntax,
                 index: index as i32,
                 message: Message {
                     plain: message.to_string(),
